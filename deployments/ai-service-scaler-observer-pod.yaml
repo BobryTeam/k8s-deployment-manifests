@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ai-service-scaler-observer
+spec:
+  containers:
+  - name: trend-analyzer
+    image: trend-analyzer-image:latest
+    ports:
+    - containerPort: 8080
+    env:
+    - name: CACHE_HOST
+      value: "localhost"
+    - name: CACHE_PORT
+      value: "6379"
+    - name: KAFKA_BOOTSTRAP_SERVERS
+      value: kafka:9092
+  - name: observer-manager
+    image: observer-manager-image:latest
+    ports:
+    - containerPort: 8081
+    env:
+    - name: CACHE_HOST
+      value: "localhost"
+    - name: CACHE_PORT
+      value: "6379"
+    - name: KAFKA_BOOTSTRAP_SERVERS
+      value: kafka:9092
+  - name: metrics-collector
+    image: metrics-collector-image:latest
+    ports:
+    - containerPort: 8082
+    env:
+    - name: CACHE_HOST
+      value: "localhost"
+    - name: CACHE_PORT
+      value: "6379"
+    - name: KAFKA_BOOTSTRAP_SERVERS
+      value: kafka:9092
+  - name: cache
+    # need to do
+    # image: database
+    ports:
+    - containerPort: 6379
